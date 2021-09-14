@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "argus"
+version = "0.1.0-alpha.0"
+description = "Free for all debates on Discord"
+authors = ["Taven <taven@outlook.in>"]
+license = "GPL-3.0-only"
+readme = "README.md"
+homepage = "https://opendebates.net"
+repository = "https://github.com/OpenDebates/Argus"
+documentation = "https://argus.readthedocs.io"
+keywords = [
+    "discord",
+    "bot",
+    "debate",
+    "openskill",
+    "hikari"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+	"Environment :: Console",
+	"Framework :: AsyncIO",
+	"Intended Audience :: End Users/Desktop",
+	"License :: OSI Approved :: Apache Software License",
+	"Natural Language :: English",
+	"Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Communications :: Chat"
+]
+packages = [
+    { include = "argus"}
+]
+include = [
+    ".bumpversion.cfg",
+    ".editorconfig",
+    ".readthedocs.yml",
+    "AUTHORS.rst",
+    "plugins/*",
+    "docs/*",
+    "tox.ini",
+    "poetry.lock"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.10"
+motor = "^2.5.1"
+schema = "^0.7.4"
+hikari-lightbulb = "^1.2.5"
+
+[tool.poetry.dev-dependencies]
+Sphinx = "^4.0.2"
+sphinx-rtd-theme = "^0.5.2"
+bump2version = "^1.0.1"
+tox = "^3.23.1"
+check-manifest = "^0.46"
+readme-renderer = {extras = ["md"], version = "^29.0"}
+twine = "^3.4.1"
+black = "^21.6b0"
+
+[tool.poetry.scripts]
+argus = 'argus.__main__:main'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
