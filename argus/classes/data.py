@@ -33,6 +33,7 @@ class Topic:
                 f'votes="{self.votes}", message="{self.message}")'
              )
     
+ 
   def __str__(
     self
   ) -> str:
@@ -166,3 +167,47 @@ class DebateMatch:
             
         self.concluding = False
         self.concluded = False
+    
+    def add_for(
+        self,
+        member: Participant
+    ) -> None:
+        for participant in self.participants:
+            if participant.id == member.id:
+                member.against = False
+                return
+        member.against = False
+        
+        if len(self.participants) == 1:
+            self.participants[0].session_start, p.session_start = datetime.datetime.utcnow(), datetime.datetime.utcnow()
+    
+    def add_against(
+        self,
+        member: Participant
+    ) -> None:
+        for participant in self.participants:
+            if participant.id == member.id:
+                member.against = True
+                return
+        member.against = True
+        
+        if len(self.participants) == 1:
+            self.participants[0].session_start, p.session_start = datetime.datetime.utcnow(), datetime.datetime.utcnow()
+         
+    def remove_participant(
+        self,
+        member: hikari.Member
+    ) -> None:
+        for m in self.participants:
+            if m.id == member.id:
+                if not m.debater:
+                    self.participants.remove(m)   
+    
+     def check_participant(
+         self,
+         member: hikari.Member
+     ) -> bool:
+        for m in self.participants:
+            if m.id == member.id:
+                return True
+        return False
