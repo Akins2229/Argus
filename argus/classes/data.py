@@ -1,5 +1,7 @@
 import hikari
-from typing import Any
+import datetime
+
+from typing import Any, List, Optional
 
 class Topic:
   def __init__(
@@ -86,3 +88,81 @@ class Topic:
     member: hikari.Member
   ) -> None:
     self.voters.remove(member)
+
+    
+    
+class Participant:
+    def __init__(
+        self,
+        member: hikari.Member,
+        skill: int, # skill is a parameter to represent openskill rank
+        session_start: datetime.datetime
+    ) -> None:
+        self.member=member
+        self.id=member.id
+        self.debater=False
+        self.votes: List[Participant] = []
+        self.place = None
+        self.against=None
+        
+        self.skill_pre = skill
+        self.skill_post = 0
+        self.skill_change = 0
+        
+        self.session_start: datetime.datetime = session_start
+        self.session_end: Optional[datetime.datetime] = None
+        self.session_duration: float = 0
+            
+     def __repr__(
+         self
+     ) -> Any:
+        return (
+            f"{self.member.display_name}(elo_post={self.elo_post},"
+            f"total_votes={self.total_votes()}, place={self.place}), "
+            f"session_duration={self.session_duration}"
+        )
+    
+    def time_spent(
+        self
+    ) -> Any:
+        return self.session_end.totalseconds() - self.session_start.totalseconds()
+    
+    def update_duration(
+        self
+    ) -> None:
+        self.session_duration+=float(self.time_spent())
+        
+    def voting_power(
+        self
+    ) -> float:
+        if self.debater:
+            return 1 * (1.039582 * (self.session_duration ** 1.579646))
+        else:
+            return 0.5 * (1.039582 * (self.session_duration ** 1.579646))
+        
+    def total_votes(
+        self
+    ) -> float:
+        votes: float = 0
+        for voter in self.votes:
+            if voter.against == self.against:
+                votes += voter.voting_power()
+            else:
+                votes += voter.voting_power() + 1
+        return votes
+    
+
+    
+class DebateMatch:
+    def __init__(
+        self,
+        topic: Any # can be removed (I think), also unsure of type so I didn't type it beyond Any; probably string
+    ) -> None:
+        self.topic = topic
+        self.participants: List[Participant] = []
+        
+        self.session_start: Optional(datetime.datetime) = None
+        self.session_end: Optional(datetime.datetime) = None
+            
+        self.concluding = False
+        self.concluded = False
